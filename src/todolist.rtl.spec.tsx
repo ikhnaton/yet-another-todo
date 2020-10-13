@@ -9,7 +9,7 @@ describe("React Testing Library - The Todolist item", () =>
 		const todoItem1 = "Sample Todo Item";
 		const todoItem2 = "Sample Todo Item 2";
 
-		const { getByLabelText, getByText, queryByText } = render(<Todolist />);
+		const { getByLabelText, getByText, queryByText, container } = render(<Todolist />);
 
 		expect(queryByText(todoItem1)).toBeNull();
 		expect(queryByText(todoItem2)).toBeNull();
@@ -18,12 +18,16 @@ describe("React Testing Library - The Todolist item", () =>
 		const button = getByText("Click to Add");
 
 		fireEvent.change(input, { target: { value: todoItem1 } });
-		fireEvent.click(button);
+		fireEvent.keyUp(input, { key: "Enter", keyCode: 13 });
 
 		fireEvent.change(input, { target: { value: todoItem2 } });
 		fireEvent.click(button);
 
-		expect(queryByText(todoItem1)).not.toBeNull();
+		const todo1 = queryByText(todoItem1);
+		expect(todo1).not.toBeNull();
 		expect(queryByText(todoItem2)).not.toBeNull();
+
+		fireEvent.click(todo1);
+		expect(queryByText("Y")).not.toBeNull();
 	});
 });

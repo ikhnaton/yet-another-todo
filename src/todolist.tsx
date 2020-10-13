@@ -27,22 +27,40 @@ export const Todolist:FunctionComponent = () =>
 		setTodos(newTodos);
 	};
 
+	const submit = (event: React.FormEvent<HTMLFormElement> |
+							React.KeyboardEvent<HTMLInputElement> |
+							React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+	{
+		event.preventDefault();
+		addItem({ completed: false, description });
+		setDescription("");
+	};
+
 	return (
 		<div>
 			<h1>Super Simple Todo List</h1>
-			<form>
+			<form onSubmit={submit}>
 				<label htmlFor="description">Description</label>
 				<input
 					type="text"
 					id="description"
 					value={description}
+					onKeyUp={(event) =>
+					{
+						if (event.key === "Enter")
+						{
+							submit(event);
+						}
+					}}
+					onKeyDown={(event) =>
+					{
+						if (event.key === "Enter")
+						{
+							event.nativeEvent.preventDefault();
+						}
+					}}
 					onChange={(event) => setDescription(event.currentTarget.value)}/>
-				<button onClick={(event) =>
-				{
-					event.preventDefault();
-					addItem({ completed: false, description });
-					setDescription("");
-				}} >Click to Add</button>
+				<button onClick={submit} >Click to Add</button>
 			</form>
 			<div>
 				{ todos.map((item, indexT) =>
